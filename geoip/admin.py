@@ -42,7 +42,7 @@ class ProviderAdmin(admin.ModelAdmin):
         ]
         try:
             from django.conf.urls import patterns
-            urlpatterns = patterns('', urlpatterns)
+            urlpatterns = patterns('', *urlpatterns)
         except ImportError:
             pass
         return urlpatterns + urls
