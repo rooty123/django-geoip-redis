@@ -1,6 +1,6 @@
 import os
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.shortcuts import render
 from django.contrib import admin
 
@@ -33,15 +33,19 @@ class ProviderAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super(ProviderAdmin, self).get_urls()
 
-        admin_urls = patterns(
-            '',
+        urlpatterns = [
             url(
                 r'^sync_redis/$',
                 self.admin_site.admin_view(self.start_queue_view),
                 name='admin_do_start_redis_sync'
             ),
-        )
-        return admin_urls + urls
+        ]
+        try:
+            from django.conf.urls import patterns
+            urlpatterns = patterns('', *urlpatterns)
+        except ImportError:
+            pass
+        return urlpatterns + urls
 
 
 admin.site.register(Provider, ProviderAdmin)
